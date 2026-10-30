@@ -1,14 +1,11 @@
-
 install.packages("e1071")
 library(e1071)
 install.packages("randomForest")
 library(randomForest)
-
 ### CV RF 
 data.training <- read.csv("data.csv")
 library(randomForest)
 set.seed(11234)
-
 vars <- c("Ni","Cr","Fe","Co","Al","Ti","Mo","V","W","Ta","Nb",
           "homogenize_K","CR_01","recrystalize_K","CR_02","annealing_K",
           "aging_K","ag.time_h","HR","omiga","VEC","delta_H","IED","PR")
@@ -71,18 +68,14 @@ abline(0, 1, col = "red", lty = 2)
 rmserf.cv <- sqrt(mean((data.training$ys_Mpa - pred.cv)^2))
 rmserf.cv
 
-
 ### CV ANN 
-
 library(nnet)
 set.seed(11234)
-
 K <- 5
 n <- nrow(data.training)
 folds <- sample(rep(1:K, length.out = n))
 pred.cv <- rep(NA, n)
 n.start <- 10                      # random restarts averaged per fold
-
 for (k in 1:K) {
   tr <- which(folds != k); te <- which(folds == k)
   
@@ -103,17 +96,14 @@ for (k in 1:K) {
   })
   pred.cv[te] <- rowMeans(p) * ysd + ymu
 }
-
 rmseann.cv <- sqrt(mean((data.training$ys_Mpa - pred.cv)^2))
 rmseann.cv
 
 
 ### SVR.rbf 
-
 data.training <- read.csv("data.csv")
 library(e1071)
 set.seed(123456)
-
 f <- ys_Mpa ~ Ni+Cr+Fe+Co+Al+Ti+Mo+V+W+Ta+Nb+homogenize_K+CR_01+recrystalize_K+
   CR_02+annealing_K+aging_K+ag.time_h+HR+omiga+VEC+delta_H+IED+PR
 
@@ -124,10 +114,8 @@ summary(tuned_parameters)
 
 best.gamma <- tuned_parameters$best.parameters$gamma
 best.cost  <- tuned_parameters$best.parameters$cost
-
 n <- nrow(data.training)
 folds <- sample(rep(1:5, length.out = n))
-
 pred.cv <- rep(NA, n)
 
 for (k in 1:5) {
@@ -145,7 +133,6 @@ plot(data.training$ys_Mpa, pred.cv)
 abline(0, 1)
 rmsesvr.cv <- sqrt(mean((data.training$ys_Mpa - pred.cv)^2))
 rmsesvr.cv
-
 
 #### XGBoost CV
 data.training <- read.csv("data.csv")
