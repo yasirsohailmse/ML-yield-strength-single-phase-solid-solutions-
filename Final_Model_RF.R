@@ -7,15 +7,10 @@ library(corrplot)
 install.packages("minerva")
 library(minerva)
 install.packages("GGally")
-library(GGally)
-source("https://raw.githubusercontent.com/briatte/ggcorr/master/ggcorr.R")
-#The main package dependency of ggcorr is the ggplot2 package for plot construction.
 #install.packages("dplyr")
 library(dplyr)
 install.packages("predvars")
 library(predvars)
-install.packages("e1071")
-library(e1071) 
 library(readr)
 library(dplyr)
 install.packages("randomForest")
@@ -41,19 +36,14 @@ data.virtual<- read.csv("data.virual.csv")
 data.training <-read.csv("data.csv")
 
 # Random forest
-
 set.seed(11234)
-
 rf<-randomForest(ys_Mpa ~ Ni+Cr+Fe+Co+Al+Ti+Mo+V+W+Ta+Nb+homogenize_K+CR_01+recrystalize_K+CR_02+annealing_K+aging_K+ag.time_h+HR+omiga+VEC+delta_H+IED+PR,
                  data=data.training)
 plot(data.training$ys_Mpa, predict(rf,data.training))
 rmserf<-sqrt(sum((data.training$ys_Mpa-predict(rf,data.training))^2)/length(data.training$ys_Mpa))
 #abline(0,1)
-
 #Prediction
 predict.data<-predict(rf,data.virtual)
-#write.csv(predict.data, file="data.training.predict_01.csv")
-
 R=1000
 i=1
 repeat{
